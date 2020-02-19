@@ -1,2 +1,2 @@
-pythonLearn/__pycache__/
-maps/__pycache__/
+*/__pycache__/
+maps/migrations/__pycache__/
