@@ -30,6 +30,7 @@
                         <li class="active"><a href="#">Home</a></li>
                         <li><a href="#">About</a></li>
                         <li><a href="#">Contact</a></li>
+                        {{ coordinates|json_script:"coordinates_field" }}
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
@@ -89,13 +90,22 @@
         <script>
             // Initialize and add the map
             function initMap() {
-                // The location of Uluru
-                var uluru = {lat: -25.344, lng: 131.036};
+                var coordinates = JSON.parse(document.getElementById('coordinates_field').textContent);
+                console.log(coordinates)
+                centerCords = parseInt(Object.keys(coordinates).length / 2)
                 // The map, centered at Uluru
                 var map = new google.maps.Map(
-                    document.getElementById('map'), {zoom: 4, center: uluru});
+                    document.getElementById('map'), {zoom: 15, center: coordinates[centerCords]});
+                addMarker(map, coordinates);
+            }
+
+            addMarker = (map, coordinates) => {
+                for (let [key, cord] of Object.entries(coordinates)) {
+                    // Set the marker
+                    new google.maps.Marker({position: cord, map: map});
+                }
                 // The marker, positioned at Uluru
-                var marker = new google.maps.Marker({position: uluru, map: map});
+                // var marker = new google.maps.Marker({position: coordinates[0], map: map});
             }
         </script>
         <!--Load the API from the specified URL
