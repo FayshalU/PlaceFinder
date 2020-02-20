@@ -8,7 +8,7 @@ category = ['accounting', 'airport', 'amusement_park', 'aquarium', 'art_gallery'
 
 # Create your views here.
 def index(request):
-    search_places('dhaka', 5000, 'atm')
+    # search_places('dhaka', 5000, 'atm')
     return render(request, 'maps/index.html', {})
 
 def search_places(location, radius, types):
