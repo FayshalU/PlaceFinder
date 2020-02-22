@@ -282,30 +282,31 @@ result = {
 # Create your views here.
 def index(request):
    # search_places('dhaka', 5000, 'atm')
-    return render(request, 'maps/index.html', {'coordinates':[], 'categories':categories})
+   return render(request, 'maps/index.html', {'coordinates':[], 'categories':categories})
 
 def query(request):
+   address = request.GET.get('address')
+   category = request.GET.get('category').lower()
+   data = search_places(address, 5000, category)
    coordinates = []
-   for place in result["results"]:
+   for place in data["results"]:
       coordinates.append(place['geometry']['location'])
       
-   print(coordinates)
-
    return JsonResponse(json.dumps(coordinates), safe=False)
 
    # return HttpResponse(coordinates, content_type='application/json')
 
-def search_places(location, radius, types):
+def search_places(address, radius, types):
         url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
         data = {
-            'location': location,
+            'query': address,
             'radius': radius,
             'types': types,
             'key': getenv('MAPS_KEY')
         }
         res = requests.get(url, params = data)
         response = json.loads(res.content)
-        print(response['results'])
+        return response
 
 def get_place_details(place_id, fields):
         url = "https://maps.googleapis.com/maps/api/place/details/json"

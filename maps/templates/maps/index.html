@@ -106,7 +106,7 @@
                 centerCords = parseInt(Object.keys(coordinates).length / 2)
                 // The map, centered at the middle result
                 map = new google.maps.Map(
-                    document.getElementById('map'), {zoom: 15, center: coordinates[centerCords]});
+                    document.getElementById('map'), {zoom: 14, center: coordinates[centerCords]});
                 addMarker(coordinates);
             }
 
@@ -122,15 +122,22 @@
                 var category = document.getElementById('category').value;
 
                 if (!address) {
-
+                    alert('Please enter an address!');
+                    return;
                 }
                 var jqxhr = $.get( `query?address=${address}&category=${category}`, () => {})
                     .done((data) => {
                         console.log( JSON.parse(data) );
                         coordinates = JSON.parse(data);
-                        updateMap();
+                        if (coordinates.length > 0) {
+                            updateMap();
+                        }
+                        else {
+                            alert('No results found!');
+                            initMap();
+                        }
                     })
-                    .fail(function(error) {
+                    .fail((error) => {
                         console.log( 'error' );
                     });
 
