@@ -97,13 +97,9 @@
             var coordinates = [];
             // Initialize and add the map
             function initMap() {
-                // coordinates = JSON.parse(document.getElementById('coordinates_field').textContent);
-                // console.log(coordinates)
-                // centerCords = parseInt(Object.keys(coordinates).length / 2)
-                // The map, centered at Uluru
+                // The map, centered at Dhaka
                 map = new google.maps.Map(
                     document.getElementById('map'), {zoom: 15, center: {lat: 23.7104, lng: 90.40744}});
-                // addMarker(coordinates);
             }
 
             updateMap = () => {
@@ -119,8 +115,6 @@
                     // Set the marker
                     new google.maps.Marker({position: cord, map: map});
                 }
-                // The marker, positioned at Uluru
-                // var marker = new google.maps.Marker({position: coordinates[0], map: map});
             }
 
             search = () => {

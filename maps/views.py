@@ -282,12 +282,7 @@ result = {
 # Create your views here.
 def index(request):
    # search_places('dhaka', 5000, 'atm')
-    coordinates = []
-    for place in result["results"]:
-        coordinates.append(place['geometry']['location'])
-    
-   # print(coordinates)
-    return render(request, 'maps/index.html', {'coordinates':coordinates, 'categories':categories})
+    return render(request, 'maps/index.html', {'coordinates':[], 'categories':categories})
 
 def query(request):
    coordinates = []
