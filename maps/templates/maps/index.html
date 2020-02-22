@@ -97,20 +97,18 @@
             var coordinates = [];
             // Initialize and add the map
             function initMap() {
-                var coordinates = JSON.parse(document.getElementById('coordinates_field').textContent);
-                console.log(coordinates)
-                centerCords = parseInt(Object.keys(coordinates).length / 2)
+                // coordinates = JSON.parse(document.getElementById('coordinates_field').textContent);
+                // console.log(coordinates)
+                // centerCords = parseInt(Object.keys(coordinates).length / 2)
                 // The map, centered at Uluru
                 map = new google.maps.Map(
-                    document.getElementById('map'), {zoom: 15, center: coordinates[centerCords]});
-                addMarker(coordinates);
+                    document.getElementById('map'), {zoom: 15, center: {lat: 23.7104, lng: 90.40744}});
+                // addMarker(coordinates);
             }
 
             updateMap = () => {
-                // coordinates = JSON.parse(document.getElementById('coordinates_field').textContent);
-                console.log(coordinates)
                 centerCords = parseInt(Object.keys(coordinates).length / 2)
-                // The map, centered at Uluru
+                // The map, centered at the middle result
                 map = new google.maps.Map(
                     document.getElementById('map'), {zoom: 15, center: coordinates[centerCords]});
                 addMarker(coordinates);
@@ -132,17 +130,14 @@
                 if (!address) {
 
                 }
-                var jqxhr = $.get( "query", function() {
-                    alert( "success" );
+                var jqxhr = $.get( `query?address=${address}&category=${category}`, () => {})
+                    .done((data) => {
+                        console.log( JSON.parse(data) );
+                        coordinates = JSON.parse(data);
+                        updateMap();
                     })
-                    .done(function() {
-                        alert( "second success" );
-                    })
-                    .fail(function() {
-                        alert( "error" );
-                    })
-                    .always(function() {
-                        alert( "finished" );
+                    .fail(function(error) {
+                        console.log( 'error' );
                     });
 
             }

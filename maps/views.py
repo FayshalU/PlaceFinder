@@ -1,4 +1,4 @@
-# from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 import requests
 import json
@@ -286,11 +286,19 @@ def index(request):
     for place in result["results"]:
         coordinates.append(place['geometry']['location'])
     
-    # print(coordinates)
+   # print(coordinates)
     return render(request, 'maps/index.html', {'coordinates':coordinates, 'categories':categories})
 
 def query(request):
-   return request
+   coordinates = []
+   for place in result["results"]:
+      coordinates.append(place['geometry']['location'])
+      
+   print(coordinates)
+
+   return JsonResponse(json.dumps(coordinates), safe=False)
+
+   # return HttpResponse(coordinates, content_type='application/json')
 
 def search_places(location, radius, types):
         url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
