@@ -46,7 +46,7 @@
                     </div>
                     <div class="col-lg-4">
                       <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Address" aria-label="...">
+                        <input type="text" id="address" class="form-control" placeholder="Address" aria-label="...">
                       </div><!-- /input-group -->
                     </div>
                     <div class="col-lg-3"></div>
@@ -59,7 +59,7 @@
                     </div>
                     <div class="col-lg-4">
                       <div class="input-group">
-                        <select  class="form-control">
+                        <select  class="form-control"  id="category">
                             {% for category in categories %}
                                 <option class="form-control" value="{{ category }}">{{ category }}</option>
                             {% endfor %}>
@@ -72,7 +72,7 @@
                     <div class="col-lg-5"></div>
                     <div class="col-lg-2 top">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default">Search...</button>
+                            <button type="button" class="btn btn-default" onclick="search()">Search...</button>
                         </div>
                     </div>
                     <div class="col-lg-5"></div>
@@ -93,24 +93,58 @@
         </div><!--/.container-->
         
         <script>
+            var map = null;
+            var coordinates = [];
             // Initialize and add the map
             function initMap() {
                 var coordinates = JSON.parse(document.getElementById('coordinates_field').textContent);
                 console.log(coordinates)
                 centerCords = parseInt(Object.keys(coordinates).length / 2)
                 // The map, centered at Uluru
-                var map = new google.maps.Map(
+                map = new google.maps.Map(
                     document.getElementById('map'), {zoom: 15, center: coordinates[centerCords]});
-                addMarker(map, coordinates);
+                addMarker(coordinates);
             }
 
-            addMarker = (map, coordinates) => {
+            updateMap = () => {
+                // coordinates = JSON.parse(document.getElementById('coordinates_field').textContent);
+                console.log(coordinates)
+                centerCords = parseInt(Object.keys(coordinates).length / 2)
+                // The map, centered at Uluru
+                map = new google.maps.Map(
+                    document.getElementById('map'), {zoom: 15, center: coordinates[centerCords]});
+                addMarker(coordinates);
+            }
+
+            addMarker = (coordinates) => {
                 for (let [key, cord] of Object.entries(coordinates)) {
                     // Set the marker
                     new google.maps.Marker({position: cord, map: map});
                 }
                 // The marker, positioned at Uluru
                 // var marker = new google.maps.Marker({position: coordinates[0], map: map});
+            }
+
+            search = () => {
+                var address = document.getElementById('address').value.trim();
+                var category = document.getElementById('category').value;
+
+                if (!address) {
+
+                }
+                var jqxhr = $.get( "query", function() {
+                    alert( "success" );
+                    })
+                    .done(function() {
+                        alert( "second success" );
+                    })
+                    .fail(function() {
+                        alert( "error" );
+                    })
+                    .always(function() {
+                        alert( "finished" );
+                    });
+
             }
         </script>
         <!--Load the API from the specified URL
