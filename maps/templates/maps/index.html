@@ -43,56 +43,35 @@
       
         <div class="container" role="main">
             <div class="jumbotron">
-                <p>Welcome to My map</p>
-                <div class="row">
-                    <div class="col-lg-3"></div>
-                    <div class="col-lg-2 top">
-                        <span class="right">Select an area:</span>
+                <!-- <p class="lead">Welcome to My map</p> -->
+                <form class="container center">
+                    <div class="form-group">
+                      <label for="address">Select an area:</label>
+                      <input type="text" class="form-control" id="address" aria-describedby="addressHelp" placeholder="Enter address" required >
+                      <small class="form-text text-muted">Ex. Uttara, Dhaka</small>
                     </div>
-                    <div class="col-lg-4">
-                      <div class="input-group">
-                        <input type="text" id="address" class="form-control" placeholder="Address" aria-label="...">
-                      </div><!-- /input-group -->
-                    </div>
-                    <div class="col-lg-3"></div>
-                </div><!-- /.row -->
-                <br>
-                <div class="row">
-                    <div class="col-lg-3"></div>
-                    <div class="col-lg-2 top">
-                        <span class="right">Select type:</span>
-                    </div>
-                    <div class="col-lg-4">
-                      <div class="input-group">
-                        <select  class="form-control"  id="category">
+                    <div class="form-group">
+                        <label for="category">Select a category:</label>
+                        <select class="form-control" id="category">
+                            <option selected>Choose...</option>
                             {% for category in categories %}
-                                <option class="form-control" value="{{ category }}">{{ category }}</option>
+                                    <option class="form-control" value="{{ category }}">{{ category }}</option>
                             {% endfor %}>
                         </select>
-                      </div><!-- /input-group -->
                     </div>
-                    <div class="col-lg-3"></div>
-                </div><!-- /.row -->
-                <div class="row">
-                    <div class="col-lg-5"></div>
-                    <div class="col-lg-2 top">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default" onclick="search()">Search...</button>
-                        </div>
-                    </div>
-                    <div class="col-lg-5"></div>
-                </div><!-- /.row -->
+                    <button type="button" onclick="search()" class="btn btn-primary">Search...</button>
+                </form>
             </div>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-xl-12">
                     <!--The div element for the map -->
                     <div id="map"></div>
-                </div><!--/.col-xs-6.col-lg-4-->
+                </div><!--/.col-xs-6.col-lg-12-->
             </div><!--/row-->
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                 Launch demo modal
-            </button>
+            </button> -->
             
             <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -123,6 +102,57 @@
         
         </div><!--/.container-->
         
+        <!--Load the API from the specified URL
+        * The async attribute allows the browser to render the page while the API loads
+        * The key parameter will contain your own API key (which is not needed for this tutorial)
+        * The callback parameter executes the initMap() function
+        -->
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap"></script>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
+        <!-- Latest compiled and minified JavaScript -->
+        <script 
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous">
+        </script>
+        <script 
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" 
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" 
+            crossorigin="anonymous">
+        </script>
+        <script 
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" 
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" 
+            crossorigin="anonymous">
+        </script>
+        
+        <!-- Style -->
+        <style>
+            /* Show it's not fixed to the top */
+            body {
+                min-height: 75rem;
+            }
+            .theme-showcase .navbar .container {
+                width: auto;
+            }
+            .right {
+                float: right;            }
+            .top {
+                top: 4px;
+                left: 5px;
+            }
+            .center {
+                margin: auto;
+                width: 50%;
+            }
+            /* Set the size of the div element that contains the map */
+            #map {
+                height: 500px;  /* The height is 400 pixels */
+                width: 100%;  /* The width is the width of the web page */
+            }
+        </style>
+
         <script>
             var map = null;
             var coordinates = [];
@@ -156,6 +186,10 @@
                     alert('Please enter an address!');
                     return;
                 }
+                if (category === 'Choose...') {
+                    alert('Please select a category!');
+                    return;
+                }
                 var jqxhr = $.get( `query?address=${address}&category=${category}`, () => {})
                     .done((data) => {
                         console.log( JSON.parse(data) );
@@ -174,47 +208,5 @@
 
             }
         </script>
-        <!--Load the API from the specified URL
-        * The async attribute allows the browser to render the page while the API loads
-        * The key parameter will contain your own API key (which is not needed for this tutorial)
-        * The callback parameter executes the initMap() function
-        -->
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap"></script>
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
-        <!-- Latest compiled and minified JavaScript -->
-        <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
-
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        
-        <!-- Style -->
-        <style>
-            /* Show it's not fixed to the top */
-            body {
-                min-height: 75rem;
-            }
-            .theme-showcase .navbar .container {
-                width: auto;
-            }
-            .right {
-                float: right;            }
-            .top {
-                top: 4px;
-                left: 5px;
-            }
-            .center {
-                margin: auto;
-                width: 50%;
-                border: 3px solid green;
-                padding: 10px;
-            }
-            /* Set the size of the div element that contains the map */
-            #map {
-                height: 500px;  /* The height is 400 pixels */
-                width: 100%;  /* The width is the width of the web page */
-            }
-        </style>
     </body>
 </html>
