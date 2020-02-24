@@ -288,10 +288,10 @@ def query(request):
    address = request.GET.get('address')
    category = request.GET.get('category').lower()
    data = search_places(address, 5000, category)
-   coordinates = []
+   coordinates = {}
    for place in data["results"]:
-      coordinates.append(place['geometry']['location'])
-      
+      coordinates[place['id']] = place['geometry']['location']
+
    return JsonResponse(json.dumps(coordinates), safe=False)
 
    # return HttpResponse(coordinates, content_type='application/json')

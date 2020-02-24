@@ -108,8 +108,8 @@
         * The callback parameter executes the initMap() function
         -->
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap"></script>
+
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
         <!-- Latest compiled and minified JavaScript -->
         <script 
             src="https://code.jquery.com/jquery-3.2.1.min.js"
@@ -126,7 +126,7 @@
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" 
             crossorigin="anonymous">
         </script>
-        
+
         <!-- Style -->
         <style>
             /* Show it's not fixed to the top */
@@ -148,33 +148,81 @@
             }
             /* Set the size of the div element that contains the map */
             #map {
-                height: 500px;  /* The height is 400 pixels */
+                height: 500px;  /* The height is 500 pixels */
                 width: 100%;  /* The width is the width of the web page */
             }
         </style>
 
         <script>
             var map = null;
-            var coordinates = [];
+            var coordinates = {};
             // Initialize and add the map
             function initMap() {
                 // The map, centered at Dhaka
                 map = new google.maps.Map(
                     document.getElementById('map'), {zoom: 15, center: {lat: 23.7104, lng: 90.40744}});
+
+                //Listen for any clicks on the map.
+                // google.maps.event.addListener(map, 'click', function(event) {                
+                //     //Get the location that the user clicked.
+                //     // var clickedLocation = event.latLng;
+                //     console.log(event);
+
+                //     marker = new google.maps.Marker({
+                //             position: event.latLng,
+                //             map: map,
+                //             draggable: true //make it draggable
+                //         });
+                //     //If the marker hasn't been added.
+                //     // if(marker === false){
+                //     //     //Create the marker.
+                //     //     marker = new google.maps.Marker({
+                //     //         position: clickedLocation,
+                //     //         map: map,
+                //     //         draggable: true //make it draggable
+                //     //     });
+                //     //     //Listen for drag events!
+                //     //     google.maps.event.addListener(marker, 'dragend', function(event){
+                //     //         markerLocation();
+                //     //     });
+                //     // } else{
+                //     //     //Marker has already been added, so just change its location.
+                //     //     marker.setPosition(clickedLocation);
+                //     // }
+                //     //Get the marker's location.
+                //     // markerLocation();
+                // });
             }
 
             updateMap = () => {
-                centerCords = parseInt(Object.keys(coordinates).length / 2)
+                centerCords = getCenterIndex();
+
                 // The map, centered at the middle result
                 map = new google.maps.Map(
-                    document.getElementById('map'), {zoom: 14, center: coordinates[centerCords]});
+                    document.getElementById('map'), {zoom: 15, center: coordinates[centerCords]});
                 addMarker(coordinates);
+            }
+
+            getCenterIndex = () => {
+                centerIndex = parseInt(Object.keys(coordinates).length / 2);
+                var i = 0;
+                for (x in coordinates) {
+                    i++;
+                    if (i == centerIndex) {
+                        return x;
+                    }
+                }
             }
 
             addMarker = (coordinates) => {
                 for (let [key, cord] of Object.entries(coordinates)) {
                     // Set the marker
-                    new google.maps.Marker({position: cord, map: map});
+                    var marker = new google.maps.Marker({position: cord, map: map});
+
+                    //Listen for clicks on the map.
+                    google.maps.event.addListener(marker, 'click', function() { 
+                        alert("I am marker " + key); 
+                    }); 
                 }
             }
 
@@ -194,7 +242,7 @@
                     .done((data) => {
                         console.log( JSON.parse(data) );
                         coordinates = JSON.parse(data);
-                        if (coordinates.length > 0) {
+                        if (Object.keys(coordinates).length > 0) {
                             updateMap();
                         }
                         else {
