@@ -3,24 +3,21 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>My Map</title>
+        <title>Place Finder</title>
         <meta name="author" content="Fayshal Uddin">
+
         <!-- Latest compiled and minified CSS -->
-        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+        <link href="https://fonts.googleapis.com/css?family=Satisfy&display=swap" rel="stylesheet">
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-        <!-- Optional theme -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-        
     </head>
     <body>
         <!-- Fixed navbar -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark  mb-4">
             <div class="container">
-                <a class="navbar-brand" href="#">My Map</a>
+                <a class="navbar-brand" href="#">Place Finder</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
                 </button>
@@ -40,7 +37,7 @@
                 </div>
             </div>
         </nav>
-      
+
         <div class="container" role="main">
             <div class="jumbotron">
                 <!-- <p class="lead">Welcome to My map</p> -->
@@ -69,39 +66,42 @@
                 </div><!--/.col-xs-6.col-lg-12-->
             </div><!--/row-->
             <!-- Button trigger modal -->
-            <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mapModal" onclick="renderDetails()">
                 Launch demo modal
-            </button> -->
-            
+            </button>
+
             <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+            <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="mapModalLabel"></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container">
+                                <div id="modalContent"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" id="modalGoogle" class="btn btn-primary">Open on Google Maps</a>
+                            <a href="#" id="modalWebsite" class="btn btn-primary">Visit website</a>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
                     </div>
-                    <div class="modal-body">
-                    ...
-                    </div>
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
                 </div>
             </div>
-  
+
             <hr>
-        
+
             <footer>
                 <p>&copy; 2020 Company, Inc.</p>
             </footer>
-        
+
         </div><!--/.container-->
-        
+
         <!--Load the API from the specified URL
         * The async attribute allows the browser to render the page while the API loads
         * The key parameter will contain your own API key (which is not needed for this tutorial)
@@ -133,6 +133,9 @@
             body {
                 min-height: 75rem;
             }
+            .navbar-brand {
+                font-family: 'Satisfy', cursive;
+            }
             .theme-showcase .navbar .container {
                 width: auto;
             }
@@ -156,42 +159,12 @@
         <script>
             var map = null;
             var coordinates = {};
+            var details = {'formatted_address': '1180 1st St, New Windsor, NY 12553, USA', 'formatted_phone_number': '(845) 838-8200', 'geometry': {'location': {'lat': 41.4984032, 'lng': -74.1008627}, 'viewport': {'northeast': {'lat': 41.4997423802915, 'lng': -74.09954781970849}, 'southwest': {'lat': 41.4970444197085, 'lng': -74.1022457802915}}}, 'international_phone_number': '+1 845-838-8200', 'rating': 3.9, 'reviews': [{'author_name': 'Thomas Smith', 'author_url': 'https://www.google.com/maps/contrib/100279987397703298674/reviews', 'language': 'en', 'profile_photo_url': 'https://lh5.ggpht.com/-cKQQTFuKZqA/AAAAAAAAAAI/AAAAAAAAAAA/7F_mw9l6DDc/s128-c0x00000000-cc-rp-mo-ba4/photo.jpg', 'rating': 5, 'relative_time_description': '3 months ago', 'text': 'I loved visiting for the airshow. Sure getting in and around was a pain but I loved all of the jets and the location was very convenient. I have also flown through this small regional airport and highly recommend if you have the chance. Very quick to board.', 'time': 1573789777}, {'author_name': 'John Randall', 'author_url': 'https://www.google.com/maps/contrib/108742819666345253857/reviews', 'language': 'en', 'profile_photo_url': 'https://lh6.ggpht.com/-upnRrUxSwDI/AAAAAAAAAAI/AAAAAAAAAAA/sIaKewIU5To/s128-c0x00000000-cc-rp-mo/photo.jpg', 'rating': 5, 'relative_time_description': 'a week ago', 'text': 'I enjoy flying out of this airport because it doesn’t have the heavy traffic like the city airports have. I have always enjoyed it here at Stewart.', 'time': 1581910320}, {'author_name': 'R Stunetii', 'author_url': 'https://www.google.com/maps/contrib/117157043062285187208/reviews', 'language': 'en', 'profile_photo_url': 'https://lh3.ggpht.com/-JlYt1d2x9bQ/AAAAAAAAAAI/AAAAAAAAAAA/o6_Aep9LBbI/s128-c0x00000000-cc-rp-mo-ba5/photo.jpg', 'rating': 5, 'relative_time_description': '6 months ago', 'text': "Fantastic airport - quick, hassle free. It's so easy to drive to. Once there, simply park, walk a few minutes and then  you're at the airport. It's not a big airport, but that's why it's just so much easier coming here. The service is friendly and normally as fast as can be expected. Security is normally pretty fast, although not always.", 'time': 1564447250}, {'author_name': 'DamianTTC .', 'author_url': 'https://www.google.com/maps/contrib/117052009888738000742/reviews', 'language': 'en', 'profile_photo_url': 'https://lh6.ggpht.com/-QO_TmuwTsYQ/AAAAAAAAAAI/AAAAAAAAAAA/cZs730TjGDY/s128-c0x00000000-cc-rp-mo-ba3/photo.jpg', 'rating': 5, 'relative_time_description': 'in the last week', 'text': 'Dane, at ENTERPRISE car rentals NY Stewart International Airport facility, did an excellent  job of correcting my mistake & providing a superb rental experience.  Thank you Dane & Enterprise!', 'time': 1582046674}, {'author_name': 'James Adams', 'author_url': 'https://www.google.com/maps/contrib/105612866679638796367/reviews', 'language': 'en', 'profile_photo_url': 'https://lh6.ggpht.com/-ah_Wt3eAuA4/AAAAAAAAAAI/AAAAAAAAAAA/PFOsnp_Mns0/s128-c0x00000000-cc-rp-mo/photo.jpg', 'rating': 5, 'relative_time_description': '5 months ago', 'text': 'Stewart Airport is convenient, low-key, and pleasant to fly in or out of.  I choose Stewart whenever I fly between New York and Florida.  One of the best and least-crowded airports that I have seen. Recommended.', 'time': 1569092858}], 'url': 'https://maps.google.com/?cid=6689345890797655517', 'website': 'https://www.swfny.com/'};
             // Initialize and add the map
             function initMap() {
                 // The map, centered at Dhaka
                 map = new google.maps.Map(
                     document.getElementById('map'), {zoom: 15, center: {lat: 23.7104, lng: 90.40744}});
-
-                //Listen for any clicks on the map.
-                // google.maps.event.addListener(map, 'click', function(event) {                
-                //     //Get the location that the user clicked.
-                //     // var clickedLocation = event.latLng;
-                //     console.log(event);
-
-                //     marker = new google.maps.Marker({
-                //             position: event.latLng,
-                //             map: map,
-                //             draggable: true //make it draggable
-                //         });
-                //     //If the marker hasn't been added.
-                //     // if(marker === false){
-                //     //     //Create the marker.
-                //     //     marker = new google.maps.Marker({
-                //     //         position: clickedLocation,
-                //     //         map: map,
-                //     //         draggable: true //make it draggable
-                //     //     });
-                //     //     //Listen for drag events!
-                //     //     google.maps.event.addListener(marker, 'dragend', function(event){
-                //     //         markerLocation();
-                //     //     });
-                //     // } else{
-                //     //     //Marker has already been added, so just change its location.
-                //     //     marker.setPosition(clickedLocation);
-                //     // }
-                //     //Get the marker's location.
-                //     // markerLocation();
-                // });
             }
 
             updateMap = () => {
@@ -221,11 +194,12 @@
 
                     //Listen for clicks on the map.
                     google.maps.event.addListener(marker, 'click', function() { 
-                        alert("I am marker " + key); 
+                        getDetails(key); 
                     }); 
                 }
             }
 
+            // Search all data by category
             search = () => {
                 var address = document.getElementById('address').value.trim();
                 var category = document.getElementById('category').value;
@@ -253,7 +227,69 @@
                     .fail((error) => {
                         console.log( 'error' );
                     });
+            }
 
+            // Get place details by place_id
+            getDetails = (place_id) => {
+                if (!place_id) {
+                    alert('Invalid place id!');
+                    return;
+                }
+
+                var jqxhr = $.get( `details?place_id=${place_id}`, () => {})
+                    .done((data) => {
+                        console.log( JSON.parse(data) );
+                        var details = JSON.parse(data);
+                        // if (Object.keys(coordinates).length > 0) {
+                        //     updateMap();
+                        // }
+                        // else {
+                        //     alert('No results found!');
+                        //     initMap();
+                        // }
+                    })
+                    .fail((error) => {
+                        console.log( 'error' );
+                    });
+            }
+
+            // Render details in the modal
+            renderDetails = () => {
+                var modal = document.getElementById('modalContent');
+                var reviewsStr = '<div class="row">';
+                var reviews = details['reviews'];
+                if (details['reviews'].length > 3 ) {
+                    reviews = reviews.slice(0, 3);
+                }
+                
+                reviews = reviews.map((review) => {
+                    reviewsStr += `
+                                        <div class="col-sm-4">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${review.author_name}</h5>
+                                                    <p class="card-text">Review: ${review.text}</p>
+                                                    <p class="card-text">Rating: ${review.rating}</p>
+                                                    <p class="card-text">Time: ${review.relative_time_description}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `
+                });
+
+                reviewsStr += '</div>';
+
+                modal.innerHTML = `<p>Address: <span id="modalAddress">${details.formatted_address}</span></p>
+                                    <p>Phone number: <span id="modalPhone">${details.formatted_phone_number}</span></p>
+                                    <p>Int. phone number: <span id="modalIntPhone">${details.international_phone_number}</span></p>
+                                    <p>Rating: <span id="modalRating">${details.rating}</span></p>
+                                    <p>Opening hours: <span id="modalOpenings">${details.opening_hours}</span></p>
+
+                                    ${reviewsStr}`;
+
+                $("#mapModalLabel").text(details.name);
+                $("#modalGoogle").attr("href", details.url);
+                $("#modalWebsite").attr("href", details.website);
             }
         </script>
     </body>

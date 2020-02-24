@@ -290,7 +290,7 @@ def query(request):
    data = search_places(address, 5000, category)
    coordinates = {}
    for place in data["results"]:
-      coordinates[place['id']] = place['geometry']['location']
+      coordinates[place['place_id']] = place['geometry']['location']
 
    return JsonResponse(json.dumps(coordinates), safe=False)
 
@@ -308,10 +308,17 @@ def search_places(address, radius, types):
         response = json.loads(res.content)
         return response
 
+def details(request):
+   place_id = request.GET.get('place_id')
+   fields = ['name', 'formatted_address', 'formatted_phone_number', 'geometry', 'international_phone_number', 'rating', 'reviews', 'url', 'website', 'opening_hours']
+   data = get_place_details(place_id, fields)
+   print(data['result'])
+   return JsonResponse(json.dumps(data['result']), safe=False)
+
 def get_place_details(place_id, fields):
         url = "https://maps.googleapis.com/maps/api/place/details/json"
         data = {
-            'placeid': place_id,
+            'place_id': place_id,
             'fields': ",".join(fields),
             'key': getenv('MAPS_KEY')
         }
