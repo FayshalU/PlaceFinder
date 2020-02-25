@@ -9,7 +9,7 @@ categories = ['Accounting', 'Airport', 'Amusement_park', 'Aquarium', 'Art_galler
 # Create your views here.
 def index(request):
    # search_places('dhaka', 5000, 'atm')
-   return render(request, 'maps/index.html', {'coordinates':[], 'categories':categories})
+   return render(request, 'maps/index.html', {'coordinates': [], 'categories': categories, 'key': getenv('MAPS_KEY')})
 
 def query(request):
    address = request.GET.get('address')
