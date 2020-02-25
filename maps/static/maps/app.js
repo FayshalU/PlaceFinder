@@ -46,11 +46,26 @@ search = () => {
     var category = document.getElementById('category').value;
 
     if (!address) {
-        alert('Please enter an address!');
+        // alert('Please enter an address!');
+        $.notify({
+            // options
+            message: 'Please enter an address!' 
+        },{
+            // settings
+            type: 'danger'
+        });
+
         return;
     }
     if (category === 'Choose...') {
-        alert('Please select a category!');
+        // alert('Please select a category!');
+        $.notify({
+            // options
+            message: 'Please select a category!' 
+        },{
+            // settings
+            type: 'danger'
+        });
         return;
     }
     var jqxhr = $.get( `query?address=${address}&category=${category}`, () => {})
@@ -60,7 +75,14 @@ search = () => {
                 updateMap();
             }
             else {
-                alert('No results found!');
+                // alert('No results found!');
+                $.notify({
+                    // options
+                    message: 'No results found!' 
+                },{
+                    // settings
+                    type: 'danger'
+                });
                 initMap();
             }
         })
@@ -72,7 +94,14 @@ search = () => {
 // Get place details by place_id
 getDetails = (place_id) => {
     if (!place_id) {
-        alert('Invalid place id!');
+        // alert('Invalid place id!');
+        $.notify({
+            // options
+            message: 'Invalid place id!' 
+        },{
+            // settings
+            type: 'danger'
+        });
         return;
     }
 
@@ -83,7 +112,14 @@ getDetails = (place_id) => {
                 renderDetails();
             }
             else {
-                alert('Can\'t find the place!');
+                // alert('Can\'t find the place!');
+                $.notify({
+                    // options
+                    message: 'Can\'t find the place!' 
+                },{
+                    // settings
+                    type: 'danger'
+                });
             }
         })
         .fail((error) => {
