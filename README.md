@@ -3,7 +3,7 @@
 
 ### Description
 
-This is a simple Django application allows to search for locations and get their details.
+This is a simple Django application that allows to search for locations and get their details.
 
 ## Dependencies
 
@@ -14,7 +14,7 @@ This is a simple Django application allows to search for locations and get their
 
 ### How to install
   - Clone this project
-  - Create a file and name in `.env`. Write the following line on the file
+  - Create a file and name it `.env`. Write the following line on the file
     ```sh
     MAPS_KEY=YOUR_GOOGLE_MAP_API_KEY
     ```
