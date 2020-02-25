@@ -66,9 +66,7 @@
                 </div><!--/.col-xs-6.col-lg-12-->
             </div><!--/row-->
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mapModal" onclick="renderDetails()">
-                Launch demo modal
-            </button>
+            <button type="button" id="modalBtn" data-toggle="modal" data-target="#mapModal" style="display: none;"></button>
 
             <!-- Modal -->
             <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalLabel" aria-hidden="true">
@@ -86,8 +84,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <a href="#" id="modalGoogle" class="btn btn-primary">Open on Google Maps</a>
-                            <a href="#" id="modalWebsite" class="btn btn-primary">Visit website</a>
+                            <a href="#" id="modalGoogle" class="btn btn-primary" target="_blank">Open on Google Maps</a>
+                            <a href="#" id="modalWebsite" class="btn btn-primary" target="_blank">Visit website</a>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                     </div>
@@ -159,7 +157,7 @@
         <script>
             var map = null;
             var coordinates = {};
-            var details = {'formatted_address': '1180 1st St, New Windsor, NY 12553, USA', 'formatted_phone_number': '(845) 838-8200', 'geometry': {'location': {'lat': 41.4984032, 'lng': -74.1008627}, 'viewport': {'northeast': {'lat': 41.4997423802915, 'lng': -74.09954781970849}, 'southwest': {'lat': 41.4970444197085, 'lng': -74.1022457802915}}}, 'international_phone_number': '+1 845-838-8200', 'rating': 3.9, 'reviews': [{'author_name': 'Thomas Smith', 'author_url': 'https://www.google.com/maps/contrib/100279987397703298674/reviews', 'language': 'en', 'profile_photo_url': 'https://lh5.ggpht.com/-cKQQTFuKZqA/AAAAAAAAAAI/AAAAAAAAAAA/7F_mw9l6DDc/s128-c0x00000000-cc-rp-mo-ba4/photo.jpg', 'rating': 5, 'relative_time_description': '3 months ago', 'text': 'I loved visiting for the airshow. Sure getting in and around was a pain but I loved all of the jets and the location was very convenient. I have also flown through this small regional airport and highly recommend if you have the chance. Very quick to board.', 'time': 1573789777}, {'author_name': 'John Randall', 'author_url': 'https://www.google.com/maps/contrib/108742819666345253857/reviews', 'language': 'en', 'profile_photo_url': 'https://lh6.ggpht.com/-upnRrUxSwDI/AAAAAAAAAAI/AAAAAAAAAAA/sIaKewIU5To/s128-c0x00000000-cc-rp-mo/photo.jpg', 'rating': 5, 'relative_time_description': 'a week ago', 'text': 'I enjoy flying out of this airport because it doesn’t have the heavy traffic like the city airports have. I have always enjoyed it here at Stewart.', 'time': 1581910320}, {'author_name': 'R Stunetii', 'author_url': 'https://www.google.com/maps/contrib/117157043062285187208/reviews', 'language': 'en', 'profile_photo_url': 'https://lh3.ggpht.com/-JlYt1d2x9bQ/AAAAAAAAAAI/AAAAAAAAAAA/o6_Aep9LBbI/s128-c0x00000000-cc-rp-mo-ba5/photo.jpg', 'rating': 5, 'relative_time_description': '6 months ago', 'text': "Fantastic airport - quick, hassle free. It's so easy to drive to. Once there, simply park, walk a few minutes and then  you're at the airport. It's not a big airport, but that's why it's just so much easier coming here. The service is friendly and normally as fast as can be expected. Security is normally pretty fast, although not always.", 'time': 1564447250}, {'author_name': 'DamianTTC .', 'author_url': 'https://www.google.com/maps/contrib/117052009888738000742/reviews', 'language': 'en', 'profile_photo_url': 'https://lh6.ggpht.com/-QO_TmuwTsYQ/AAAAAAAAAAI/AAAAAAAAAAA/cZs730TjGDY/s128-c0x00000000-cc-rp-mo-ba3/photo.jpg', 'rating': 5, 'relative_time_description': 'in the last week', 'text': 'Dane, at ENTERPRISE car rentals NY Stewart International Airport facility, did an excellent  job of correcting my mistake & providing a superb rental experience.  Thank you Dane & Enterprise!', 'time': 1582046674}, {'author_name': 'James Adams', 'author_url': 'https://www.google.com/maps/contrib/105612866679638796367/reviews', 'language': 'en', 'profile_photo_url': 'https://lh6.ggpht.com/-ah_Wt3eAuA4/AAAAAAAAAAI/AAAAAAAAAAA/PFOsnp_Mns0/s128-c0x00000000-cc-rp-mo/photo.jpg', 'rating': 5, 'relative_time_description': '5 months ago', 'text': 'Stewart Airport is convenient, low-key, and pleasant to fly in or out of.  I choose Stewart whenever I fly between New York and Florida.  One of the best and least-crowded airports that I have seen. Recommended.', 'time': 1569092858}], 'url': 'https://maps.google.com/?cid=6689345890797655517', 'website': 'https://www.swfny.com/'};
+            var details = {};
             // Initialize and add the map
             function initMap() {
                 // The map, centered at Dhaka
@@ -214,7 +212,6 @@
                 }
                 var jqxhr = $.get( `query?address=${address}&category=${category}`, () => {})
                     .done((data) => {
-                        console.log( JSON.parse(data) );
                         coordinates = JSON.parse(data);
                         if (Object.keys(coordinates).length > 0) {
                             updateMap();
@@ -238,15 +235,13 @@
 
                 var jqxhr = $.get( `details?place_id=${place_id}`, () => {})
                     .done((data) => {
-                        console.log( JSON.parse(data) );
-                        var details = JSON.parse(data);
-                        // if (Object.keys(coordinates).length > 0) {
-                        //     updateMap();
-                        // }
-                        // else {
-                        //     alert('No results found!');
-                        //     initMap();
-                        // }
+                        details = JSON.parse(data);
+                        if (details.name) {
+                            renderDetails();
+                        }
+                        else {
+                            alert('Can\'t find the place!');
+                        }
                     })
                     .fail((error) => {
                         console.log( 'error' );
@@ -263,18 +258,16 @@
                 }
                 
                 reviews = reviews.map((review) => {
-                    reviewsStr += `
-                                        <div class="col-sm-4">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">${review.author_name}</h5>
-                                                    <p class="card-text">Review: ${review.text}</p>
-                                                    <p class="card-text">Rating: ${review.rating}</p>
-                                                    <p class="card-text">Time: ${review.relative_time_description}</p>
-                                                </div>
+                    reviewsStr += `<div class="col-sm-4">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${review.author_name}</h5>
+                                                <p class="card-text">Review: ${review.text}</p>
+                                                <p class="card-text">Rating: ${review.rating}</p>
+                                                <p class="card-text">Time: ${review.relative_time_description}</p>
                                             </div>
                                         </div>
-                                    `
+                                    </div>`
                 });
 
                 reviewsStr += '</div>';
@@ -283,13 +276,14 @@
                                     <p>Phone number: <span id="modalPhone">${details.formatted_phone_number}</span></p>
                                     <p>Int. phone number: <span id="modalIntPhone">${details.international_phone_number}</span></p>
                                     <p>Rating: <span id="modalRating">${details.rating}</span></p>
-                                    <p>Opening hours: <span id="modalOpenings">${details.opening_hours}</span></p>
+                                    <p>Opening hours: <span id="modalOpenings">${details.opening_hours.periods[0].open.time} - ${details.opening_hours.periods[0].close.time}</span></p>
 
                                     ${reviewsStr}`;
 
                 document.getElementById('mapModalLabel').innerHTML = details.name;
                 $("#modalGoogle").attr("href", details.url);
                 $("#modalWebsite").attr("href", details.website);
+                $("#modalBtn").click();
             }
         </script>
     </body>
